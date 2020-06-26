@@ -1,0 +1,17 @@
+[
+    {
+        "selector": "img#hplogo",
+        "every": 10,
+        "links": [
+            "https://google.com",
+            "https://google.com.au"
+        ]
+    },
+    {
+        "selector": "span",
+        "every": 10,
+        "links": [
+            "https://example2.com"
+        ]
+    }
+]
