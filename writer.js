@@ -48,7 +48,7 @@ module.exports.write = function(name, value){
 
         switch (index){
             case API: 
-
+                _writeApiPost(name, value);
                 break;
             case FILE:
                 await _writeFile(name, value);
@@ -67,6 +67,19 @@ async function _writeFile(name, value){
     } catch (e){
         console.log(e);
         // TODO handle errors
+    }
+}
+
+async function _writeApiPost(name, value){
+    try {
+        const payload = {
+            name: name,
+            value: value
+        }
+        const res = await axios.post(API_POST_CALL, payload);
+        // TODO handle non-200 responses
+    } catch (e){
+        console.log(e);
     }
 }
 
