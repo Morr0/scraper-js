@@ -1,41 +1,30 @@
-require("dotenv").config();
 const puppeteer = require('puppeteer');
-
-const {
-	JSON_FILE = "./sample.json"
-} = process.env;
-
-console.log(JSON_FILE);
-
-const fs = require('fs');
-const obj = JSON.parse(fs.readFileSync(JSON_FILE, 'utf8'));
+const util = require("./util");
 
 (async () => {
-    const browser = await puppeteer.launch();
-	const page = await browser.newPage();
-    obj.forEach(async item => {
-		await getData(item, page);
+	const browser = await puppeteer.launch();
+	
+	const scrapables = util.getScrapables();
+	scrapables.forEach(async (element) => {
+		console.log("Loop");
+		await getData(element, browser);
 	});
 	
-    await browser.close();
+    // await browser.close();
 })();
 
-async function getData(item, page){
-	item.links.forEach(async link => {
+async function getData(item, browser){
+	item.links.forEach(async (link) => {
 		console.log(link);
-		// const page = await browser.newPage();
-		console.log("After new page");
+		const page = await browser.newPage();
 		await page.goto(link);
-		const data = await page.evaluate(() => {
-			console.log("Inside");
-			return document.querySelector(item.selector).textContent;
-		});
-		await page.close();
-		console.log("Data isL ",data);
-		writeData(item.dest, data);
-	});
-}
 
-function writeData(dest, data){
-	fs.writeFileSync(dest, data, {mode:"as"});
+		const data = await page.evaluate((item) => {
+			return document.querySelector(item.selector).textContent;
+		}, item);
+
+		console.log("Data isL ", data);
+		util.writeData(item.dest, data);
+		await page.close();
+	});
 }
