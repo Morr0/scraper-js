@@ -10,5 +10,10 @@ module.exports.getScrapables = function (){
 }
 
 module.exports.writeData = function(dest, data){
-    fs.writeFileSync(dest, data);
+    fs.writeFileSync(dest, data, {flag: "a"});
+}
+
+// Creates the template that will be written to a file
+module.exports.getWritingTemplate = function(name, value){
+    return `${name}: ${value}\n`;
 }

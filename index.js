@@ -14,16 +14,19 @@ const util = require("./util");
 })();
 
 async function getData(item, browser){
-	item.links.forEach(async (link) => {
-		console.log(link);
+	item.links.forEach(async (linkItem) => {
+		console.log(linkItem);
 		const page = await browser.newPage();
-		await page.goto(link);
+		await page.goto(linkItem.url, {
+			// in ms
+			timeout: 60000  // TODO deal with timeouts
+		});
 
-		const data = await page.evaluate((item) => {
+		const value = await page.evaluate((item) => {
 			return document.querySelector(item.selector).textContent;
 		}, item);
+		const data = util.getWritingTemplate(linkItem.name, value);
 
-		console.log("Data isL ", data);
 		util.writeData(item.dest, data);
 		await page.close();
 	});

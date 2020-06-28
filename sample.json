@@ -3,8 +3,10 @@
         "selector": "img#hplogo",
         "every": 10,
         "links": [
-            
-            "https://google.com.au"
+            {
+                "name": "Google",
+                "url": "https://google.com.au"
+            }    
         ],
         "dest": "./data.txt"
     }
