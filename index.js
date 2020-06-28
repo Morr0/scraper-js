@@ -1,10 +1,13 @@
 const puppeteer = require('puppeteer');
 const util = require("./util");
+const writer = require("./writer");
 
 (async () => {
 	const browser = await puppeteer.launch();
 	
 	const scrapables = util.getScrapables();
+	writer.init();
+
 	scrapables.forEach(async (element) => {
 		console.log("Loop");
 		await getData(element, browser);
@@ -25,9 +28,9 @@ async function getData(item, browser){
 		const value = await page.evaluate((item) => {
 			return document.querySelector(item.selector).textContent;
 		}, item);
-		const data = util.getWritingTemplate(linkItem.name, value);
+		
+		writer.write(linkItem.name, value);
 
-		util.writeData(item.dest, data);
 		await page.close();
 	});
 }
