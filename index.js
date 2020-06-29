@@ -7,7 +7,7 @@ const job = require("./job");
 	const browser = await puppeteer.launch();
 	
 	const scrapables = util.getScrapables();
-	const employer = job.initTimers(scrapables);
+	// const employer = job.initTimers(scrapables);
 	writer.init();
 
 	scrapables.forEach(async (element) => {

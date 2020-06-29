@@ -1,13 +1,15 @@
 const axios = require("axios").default;
-
 const util = require("./util");
-
 const fs = require("fs");
+
+const MongoClient = require("mongodb").MongoClient;
+let mongoClient = undefined;
 
 const {
     API_POST_CALL = undefined,
     FILE_DEST = "./data.txt",
     MONGODB_WRITE = undefined,
+    MONGODB_URL = undefined,
 } = process.env;
 
 // Indexes of writeDests
@@ -40,6 +42,25 @@ module.exports.init = function(){
     }
 
     // TODO Handle Mongodb
+    if (MONGODB_URL){
+        try {
+            mongoClient = new MongoClient(MONGODB_URL, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            });
+            mongoClient.connect((error) => {
+                if (error) return handleMongoError(error);
+
+                console.log("Connected to DB");
+            });
+        } catch (e){
+            handleMongoError(e);
+        }
+    }
+
+    function handleMongoError(error){
+        // TODO handle error
+    }
 }
 
 module.exports.write = function(name, value){
