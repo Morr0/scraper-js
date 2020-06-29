@@ -16,3 +16,4 @@ Values can be either written to a file and REST api.
     - Implement a HEAD method that gets called only once at the start of the application for initialization purposes. **If it does not return a status of 200 will not proceed the POST API calls**.
     - Implement a POST method that recieves the body as `{name, value}` json formatted. Where `name` is the name of the link and the `value` is the value extracted out of the website.
     - Check `test/server/` for an example of the REST server.
+- To write to a MongoDB database, use the environment variables described in `.sample.env` in your environment configuration.

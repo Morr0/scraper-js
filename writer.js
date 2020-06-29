@@ -8,8 +8,11 @@ let mongoClient = undefined;
 const {
     API_POST_CALL = undefined,
     FILE_DEST = "./data.txt",
-    MONGODB_WRITE = undefined,
+
+    // MongoDB
     MONGODB_URL = undefined,
+    MONGODB_DATABASE = "scraper",
+    MONGODB_COLLECTION="data",
 } = process.env;
 
 // Indexes of writeDests
@@ -107,8 +110,8 @@ async function _writeApiPost(name, value){
 
 async function _writeMongo(name, value){
     try {
-        const db = mongoClient.db("scraper");
-        const res = await db.collection("test").insertOne({
+        const db = mongoClient.db(MONGODB_DATABASE);
+        const res = await db.collection(MONGODB_COLLECTION).insertOne({
             name: name,
             value: value,
             epoch: Date.now(),
