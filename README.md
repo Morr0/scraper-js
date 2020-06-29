@@ -4,7 +4,7 @@ Feel free to use it. Duplicate sample.json to your liking. Include the link to y
 
 sample.json attributes: 
 1. selector = HTML selector query
-<!-- 2. every = every x seconds  -->
+2. every = every x seconds (Defaults to 1 hour)
 3. links = an array of links to scrape sequentially. A name/url pair.
 
 ## Writing the results: 

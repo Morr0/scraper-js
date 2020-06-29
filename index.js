@@ -1,11 +1,13 @@
 const puppeteer = require('puppeteer');
 const util = require("./util");
 const writer = require("./writer");
+const job = require("./job");
 
 (async () => {
 	const browser = await puppeteer.launch();
 	
 	const scrapables = util.getScrapables();
+	const employer = job.initTimers(scrapables);
 	writer.init();
 
 	scrapables.forEach(async (element) => {
