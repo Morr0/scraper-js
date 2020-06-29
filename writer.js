@@ -52,6 +52,7 @@ module.exports.init = function(){
                 if (error) return handleMongoError(error);
 
                 console.log("Connected to DB");
+                writeDests[MONGODB] = MONGODB_URL;
             });
         } catch (e){
             handleMongoError(e);
@@ -75,7 +76,7 @@ module.exports.write = function(name, value){
                 await _writeFile(name, value);
                 break;
             case MONGODB:
-
+                await _writeMongo(name, value);
                 break;
         }
     });
@@ -104,3 +105,17 @@ async function _writeApiPost(name, value){
     }
 }
 
+async function _writeMongo(name, value){
+    try {
+        const db = mongoClient.db("scraper");
+        const res = await db.collection("test").insertOne({
+            name: name,
+            value: value,
+            epoch: Date.now(),
+        });
+
+        // TODO handle failure
+    } catch (e){
+        console.log(e);
+    }
+}

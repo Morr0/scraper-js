@@ -15,5 +15,5 @@ module.exports.writeData = function(dest, data){
 
 // Creates the template that will be written to a file
 module.exports.getWritingTemplate = function(name, value){
-    return `${name}: ${value}\n`;
+    return `${name}: ${value} at ${Date.now()}\n`;
 }
