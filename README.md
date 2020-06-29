@@ -2,6 +2,8 @@
 
 Feel free to use it. Duplicate sample.json to your liking. Include the link to your file in .env.
 
+Each scrape request will have a timeout of 75% of the time difference between the crontab time specified for each scrape.
+
 sample.json attributes: 
 1. selector = HTML selector query
 2. cron = cronjob syntax on when to run the scrape.

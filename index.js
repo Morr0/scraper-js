@@ -24,7 +24,7 @@ async function getData(item, browser){
 		const page = await browser.newPage();
 		await page.goto(linkItem.url, {
 			// in ms
-			timeout: 60000  // TODO deal with timeouts
+			timeout: util.getTimeoutMs(item),
 		});
 
 		const value = await page.evaluate((item) => {
