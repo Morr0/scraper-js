@@ -1,7 +1,7 @@
 [
     {
         "selector": "img#hplogo",
-        "every": 3600,
+        "cron": "* * * * * *", 
         "links": [
             {
                 "name": "Google",

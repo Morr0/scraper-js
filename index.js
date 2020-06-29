@@ -1,18 +1,18 @@
 const puppeteer = require('puppeteer');
 const util = require("./util");
 const writer = require("./writer");
-const job = require("./job");
+const cron = require("node-cron");
 
 (async () => {
 	const browser = await puppeteer.launch();
 	
 	const scrapables = util.getScrapables();
-	// const employer = job.initTimers(scrapables);
 	writer.init();
 
 	scrapables.forEach(async (element) => {
-		console.log("Loop");
-		await getData(element, browser);
+		cron.schedule(element.cron, async () => {
+			await getData(element, browser);
+		});
 	});
 	
     // await browser.close();

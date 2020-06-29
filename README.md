@@ -4,11 +4,11 @@ Feel free to use it. Duplicate sample.json to your liking. Include the link to y
 
 sample.json attributes: 
 1. selector = HTML selector query
-2. every = every x seconds (Defaults to 1 hour)
+2. cron = cronjob syntax on when to run the scrape.
 3. links = an array of links to scrape sequentially. A name/url pair.
 
 ## Writing the results: 
-Values can be either written to a file and REST api. 
+Values can be written to a file, REST api and MongoDB insert. You can use all 3 methods.
 
 - To write to a file, just include the name of the file in your .env as the attribute `FILE_DEST`.
 - To write in a POST API request:
