@@ -5,3 +5,5 @@
 - [] Promisify functions to use async/await.
 - [] Handle errors and non-200 responses.
 - [] New Mongodb collection every week or so.
+- [] Multiple selectors.
+- [] Proxy calls through different servers to limit rate limiting over a certain threshold.

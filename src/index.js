@@ -1,7 +1,8 @@
 const puppeteer = require('puppeteer');
-const util = require("./util");
-const writer = require("./writer");
 const cron = require("node-cron");
+
+const util = require("./util/util");
+const writer = require("./writer");
 
 (async () => {
 	const browser = await puppeteer.launch();
@@ -20,7 +21,6 @@ const cron = require("node-cron");
 
 async function getData(item, browser){
 	item.links.forEach(async (linkItem) => {
-		console.log(linkItem);
 		const page = await browser.newPage();
 		await page.goto(linkItem.url, {
 			// in ms

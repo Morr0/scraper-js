@@ -1,6 +1,7 @@
 const axios = require("axios").default;
-const util = require("./util");
 const fs = require("fs");
+
+const util = require("./util/util");
 
 const MongoClient = require("mongodb").MongoClient;
 let mongoClient = undefined;

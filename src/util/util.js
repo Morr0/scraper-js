@@ -3,7 +3,7 @@ const fs = require('fs');
 const {timeDiffSeconds} = require("cron-diff");
 
 const {
-	JSON_FILE = "./sample.json"
+	JSON_FILE = "../sample.json"
 } = process.env;
 
 module.exports.getScrapables = function (){
