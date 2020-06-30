@@ -73,45 +73,40 @@ module.exports.init = function(){
     }
 }
 
-module.exports.write = function(name, value){
+module.exports.write = function(payload){
     writeDests.forEach(async (element, index) => {
         if (!element) return;
 
         switch (index){
             case API: 
-                _writeApiPost(name, value);
+                _writeApiPost(payload);
                 break;
             case FILE:
-                await _writeFile(name, value);
+                await _writeFile(payload);
                 break;
             case MONGODB:
-                await _writeMongo(name, value);
+                await _writeMongo(payload);
                 break;
         }
     });
 }
 
-// TODO THE entire scrape paylod with the selectors and time of initiation
-async function _writeFile(name, value){
-    const data = util.getWritingTemplate(name, value);
+async function _writeFile(payload){
+    const data = util.getWritingTemplate(payload.name, payload.value);
     try {
         util.writeData(FILE_DEST, data);
     } catch (e){
         errorHandler.failureSending(errors.SERVICE_FAILURE_FILE,
-            {name, value}, Date.now(), "file", e);
+            payload, Date.now(), "file", e);
     }
 }
 
-async function _writeApiPost(name, value){
+async function _writeApiPost(payload){
     try {
-        const payload = {
-            name: name,
-            value: value
-        }
         const res = await axios.post(API_POST_CALL, payload);
         if (res.status !== 200){
             errorHandler.failureSending(errors.SERVICE_FAILURE_API,
-                {name, value}, Date.now(), "file", "!200");
+                payload, Date.now(), "file", "!200");
         }
     } catch (e){
         errorHandler.failureSending(errors.SERVICE_FAILURE_API,
@@ -119,17 +114,16 @@ async function _writeApiPost(name, value){
     }
 }
 
-async function _writeMongo(name, value){
+async function _writeMongo(payload){
     try {
         const db = mongoClient.db(MONGODB_DATABASE);
         const res = await db.collection(MONGODB_COLLECTION).insertOne({
-            name: name,
-            value: value,
+            name: payload.name,
+            value: payload.value,
             epoch: Date.now(),
         });
-
     } catch (e){
         errorHandler.failureSending(errors.SERVICE_FAILURE_MONGO,
-            {name, value}, Date.now(), "mongo", e);
+            payload, Date.now(), "mongo", e);
     }
 }

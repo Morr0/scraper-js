@@ -7,3 +7,4 @@
 - [] New Mongodb collection every week or so.
 - [] Multiple selectors.
 - [] Proxy calls through different servers to limit rate limiting over a certain threshold.
+- [] Deal with timeout error callbacks.

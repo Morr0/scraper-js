@@ -23,37 +23,36 @@ const errors = require("./error/errors");
 
 async function getData(item, browser){
 	item.links.forEach(async (linkItem) => {
+		let payload = { // To pass to error functions and writer ones as well
+			name: linkItem.name,
+			url: linkItem.url,
+			selector: item.selector,
+		};
+
 		const page = await browser.newPage();
+		// RESULTS IN EXCESSIVE CALLS
 		// Timeout handling // Although requests might fail for other reason
-		page.on("requestfailed", () => {
-			errorHandler.timeoutOrEmptyResult(errors.SCRAPE_TIMEOUT,
-				{
-					name: linkItem.name,
-					url: linkItem.url,
-					selector: item.selector,
-				}, Date.now());
-		});
+		// page.on("requestfailed", () => {
+		// 	errorHandler.timeoutOrEmptyResult(errors.SCRAPE_TIMEOUT, 
+		// 		payload, Date.now());
+		// });
 
 		await page.goto(linkItem.url, {
 			// in ms
 			timeout: util.getTimeoutMs(item),
 		});
 
-		const value = await page.evaluate((item) => {
+		payload.value = await page.evaluate((item) => {
 			return document.querySelector(item.selector).textContent;
 		}, item);
 
 		// Empty value error
-		if (!value){
-			errorHandler.timeoutOrEmptyResult(errors.SCRAPE_EMPTY_RESULT,
-				{
-					name: linkItem.name,
-					url: linkItem.url,
-					selector: item.selector,
-				}, Date.now());
+		if (!payload.value){
+			errorHandler.timeoutOrEmptyResult(errors.SCRAPE_EMPTY_RESULT, 
+				payload, Date.now());
 		}
 		
-		writer.write(linkItem.name, value);
+		writer.write(payload);
 
 		await page.close();
 	});
