@@ -97,7 +97,7 @@ async function _writeFile(name, value){
     try {
         util.writeData(FILE_DEST, data);
     } catch (e){
-        errorHandler.timeoutOrEmptyResultOrFailureSending(errors.SERVICE_FAILURE_FILE,
+        errorHandler.failureSending(errors.SERVICE_FAILURE_FILE,
             {name, value}, Date.now(), "file", e);
     }
 }
@@ -110,11 +110,11 @@ async function _writeApiPost(name, value){
         }
         const res = await axios.post(API_POST_CALL, payload);
         if (res.status !== 200){
-            errorHandler.timeoutOrEmptyResultOrFailureSending(errors.SERVICE_FAILURE_API,
+            errorHandler.failureSending(errors.SERVICE_FAILURE_API,
                 {name, value}, Date.now(), "file", "!200");
         }
     } catch (e){
-        errorHandler.timeoutOrEmptyResultOrFailureSending(errors.SERVICE_FAILURE_API,
+        errorHandler.failureSending(errors.SERVICE_FAILURE_API,
             payload, Date.now(), "api", e);
     }
 }
@@ -129,7 +129,7 @@ async function _writeMongo(name, value){
         });
 
     } catch (e){
-        errorHandler.timeoutOrEmptyResultOrFailureSending(errors.SERVICE_FAILURE_MONGO,
+        errorHandler.failureSending(errors.SERVICE_FAILURE_MONGO,
             {name, value}, Date.now(), "mongo", e);
     }
 }

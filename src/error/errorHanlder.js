@@ -25,7 +25,22 @@ module.exports.test = function(){
     });
 }
 
-module.exports.timeoutOrEmptyResultOrFailureSending = 
+module.exports.timeoutOrEmptyResult = function(errorCode, scrapePayload, time){
+    const message = {
+        DelaySeconds: 10,
+        QueueUrl: AWS_QUEUE_URL,
+        
+        MessageBody: JSON.stringify({
+            errorCode: errorCode,
+            scrapePayload: scrapePayload,
+            time: time,
+        }),
+      };
+ 
+      sendMessage(message);
+}
+
+module.exports.failureSending = 
 function(errorCode, scrapePayload, time, sendingMethod, error){
     const message = {
        DelaySeconds: 10,

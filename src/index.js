@@ -24,6 +24,16 @@ const errors = require("./error/errors");
 async function getData(item, browser){
 	item.links.forEach(async (linkItem) => {
 		const page = await browser.newPage();
+		// Timeout handling // Although requests might fail for other reason
+		page.on("requestfailed", () => {
+			errorHandler.timeoutOrEmptyResult(errors.SCRAPE_TIMEOUT,
+				{
+					name: linkItem.name,
+					url: linkItem.url,
+					selector: item.selector,
+				}, Date.now());
+		});
+
 		await page.goto(linkItem.url, {
 			// in ms
 			timeout: util.getTimeoutMs(item),
@@ -32,6 +42,16 @@ async function getData(item, browser){
 		const value = await page.evaluate((item) => {
 			return document.querySelector(item.selector).textContent;
 		}, item);
+
+		// Empty value error
+		if (!value){
+			errorHandler.timeoutOrEmptyResult(errors.SCRAPE_EMPTY_RESULT,
+				{
+					name: linkItem.name,
+					url: linkItem.url,
+					selector: item.selector,
+				}, Date.now());
+		}
 		
 		writer.write(linkItem.name, value);
 
