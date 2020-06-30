@@ -3,6 +3,8 @@ const cron = require("node-cron");
 
 const util = require("./util/util");
 const writer = require("./writer");
+const errorHandler = require("./error/errorHanlder");
+const errors = require("./error/errors");
 
 (async () => {
 	const browser = await puppeteer.launch();
