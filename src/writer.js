@@ -27,10 +27,8 @@ let writeDests = [undefined, undefined, undefined]
 module.exports.init = function(){
     if (API_POST_CALL){
         try {
-            axios.head(API_POST_CALL)
-            .then((res) => {
-                if (res.status === 200) writeDests[API] = API_POST_CALL;
-            });
+            const res = axios.head(API_POST_CALL);
+            if (res.status === 200) return writeDests[API] = API_POST_CALL;
         } catch (e){}
     }
 
@@ -105,7 +103,7 @@ async function _writeApiPost(name, value){
         const res = await axios.post(API_POST_CALL, payload);
         // TODO handle non-200 responses
     } catch (e){
-        console.log(e);
+        // console.log(e);
     }
 }
 
