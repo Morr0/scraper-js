@@ -1,4 +1,4 @@
-const axios = require("axios").default;
+const fetch = require("node-fetch");
 const fs = require("fs");
 
 const util = require("./util/util");
@@ -28,14 +28,12 @@ let writeDests = [undefined, undefined, undefined]
 // FOR file -> Will check if it is a valid path to add it
 module.exports.init = function(){
     if (API_POST_CALL){
-        try {
-            const res = axios.head(API_POST_CALL);
+        const res = fetch(API_POST_CALL, {method: "HEAD"})
+        .then((res) => {
             if (res.status === 200) return writeDests[API] = API_POST_CALL;
-
-            errorHandler.noInitService(errors.SERVICE_NO_INIT_API);
-        } catch (error){
+        }).catch((error) => {
             errorHandler.noInitService(errors.SERVICE_NO_INIT_API, error);
-        }
+        });
     }
 
     if (FILE_DEST){
@@ -103,7 +101,10 @@ async function _writeFile(payload){
 
 async function _writeApiPost(payload){
     try {
-        const res = await axios.post(API_POST_CALL, payload);
+        const res = await fetch(API_POST_CALL, {
+            method: "POST",
+            body: JSON.stringify(payload),
+        });
         if (res.status !== 200){
             errorHandler.failureSending(errors.SERVICE_FAILURE_API,
                 payload, Date.now(), "file", "!200");

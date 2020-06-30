@@ -14,11 +14,11 @@
   },
   "dependencies": {
     "aws-sdk": "^2.707.0",
-    "axios": "^0.19.2",
     "cron-diff": "^1.0.0",
     "dotenv": "^8.2.0",
     "mongodb": "^3.5.9",
     "node-cron": "^2.0.3",
+    "node-fetch": "^2.6.0",
     "puppeteer": "^4.0.1"
   }
 }
