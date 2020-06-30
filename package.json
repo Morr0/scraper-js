@@ -13,6 +13,7 @@
     "nodemon": "^2.0.4"
   },
   "dependencies": {
+    "aws-sdk": "^2.707.0",
     "axios": "^0.19.2",
     "cron-diff": "^1.0.0",
     "dotenv": "^8.2.0",
