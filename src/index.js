@@ -26,7 +26,7 @@ async function getData(item, browser){
 		let payload = { // To pass to error functions and writer ones as well
 			name: linkItem.name,
 			url: linkItem.url,
-			selector: item.selector,
+			selectors: item.selectors,
 		};
 
 		const page = await browser.newPage();
@@ -42,15 +42,26 @@ async function getData(item, browser){
 			timeout: util.getTimeoutMs(item),
 		});
 
-		payload.value = await page.evaluate((item) => {
-			return document.querySelector(item.selector).textContent;
+		payload.values = await page.evaluate((item) => {
+			const selectorsValues = [];
+			item.selectors.forEach((selectorItem) => {
+				selectorsValues.push({
+					name: selectorItem.name,
+					value: document.querySelector(selectorItem.selector).textContent,
+				})
+			});
+			return selectorsValues;
+
+			// On 1 selector
+			// return document.querySelector(item.selector).textContent;
 		}, item);
 
 		// Empty value error
-		if (!payload.value){
-			errorHandler.timeoutOrEmptyResult(errors.SCRAPE_EMPTY_RESULT, 
-				payload, Date.now());
-		}
+		// TODO deal with any value missing
+		// if (!payload.value){
+		// 	errorHandler.timeoutOrEmptyResult(errors.SCRAPE_EMPTY_RESULT, 
+		// 		payload, Date.now());
+		// }
 		
 		writer.write(payload);
 

@@ -1,6 +1,15 @@
 [
     {
-        "selector": "img#hplogo",
+        "selectors": [
+            {
+                "name": "logo",
+                "selector": "img#hplogo"
+            },
+            {
+                "name": "country",
+                "selector": ".Q8LRLc"
+            }
+        ],
         "cron": "* * * * * *", 
         "links": [
             {

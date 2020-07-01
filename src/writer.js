@@ -90,7 +90,7 @@ module.exports.write = function(payload){
 }
 
 async function _writeFile(payload){
-    const data = util.getWritingTemplate(payload.name, payload.value);
+    const data = util.getWritingTemplate(payload.name, JSON.stringify(payload.values));
     try {
         util.writeData(FILE_DEST, data);
     } catch (e){
@@ -120,7 +120,7 @@ async function _writeMongo(payload){
         const db = mongoClient.db(MONGODB_DATABASE);
         const res = await db.collection(MONGODB_COLLECTION).insertOne({
             name: payload.name,
-            value: payload.value,
+            value: payload.values,
             epoch: Date.now(),
         });
     } catch (e){

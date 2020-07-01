@@ -12,7 +12,7 @@ sample.json attributes:
 ## Writing the results: 
 Values can be written to a file, REST api and MongoDB insert. You can use all 3 methods.
 
-- To write to a file, just include the name of the file in your .env as the attribute `FILE_DEST`.
+- To write to a file, just include the name of the file in your .env as the attribute `FILE_DEST`. **Consider not using this method, or make your own file format since it is for testing only currently**.
 - To write in a POST API request:
     - Include the rest endpoint (must be the same for HEAD and POST methods) in .env as `API_POST_CALL`.
     - Implement a HEAD method that gets called only once at the start of the application for initialization purposes. **If it does not return a status of 200 will not proceed the POST API calls**.
