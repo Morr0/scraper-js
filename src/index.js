@@ -43,11 +43,15 @@ async function getData(item, browser){
 		});
 
 		payload.values = await page.evaluate((item) => {
+			// Destructure passed in args
 			const selectorsValues = [];
-			item.selectors.forEach((selectorItem) => {
+			// Loop over each selector and query it
+			item.selectors.forEach((selectorItem) => { 
+				const selected = document.querySelector(selectorItem.selector);
+				// Construct the value and push it to the array
 				selectorsValues.push({
 					name: selectorItem.name,
-					value: document.querySelector(selectorItem.selector).textContent,
+					value: selected? selected.textContent: "",
 				})
 			});
 			return selectorsValues;
@@ -56,12 +60,13 @@ async function getData(item, browser){
 			// return document.querySelector(item.selector).textContent;
 		}, item);
 
-		// Empty value error
+		// Empty values error
 		// TODO deal with any value missing
-		// if (!payload.value){
-		// 	errorHandler.timeoutOrEmptyResult(errors.SCRAPE_EMPTY_RESULT, 
-		// 		payload, Date.now());
-		// }
+		if (item.selectors.length !== payload.values.length){
+			errorHandler.timeoutOrEmptyResult(errors.SCRAPE_EMPTY_RESULTS, 
+				payload, Date.now());
+			console.log("Got an empty");
+		}
 		
 		writer.write(payload);
 

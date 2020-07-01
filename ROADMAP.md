@@ -3,7 +3,7 @@
 - [X] Deal with timeouts, adjust timeouts to be 75% of the time difference between any 2 scrapes.
 - [X] Write to MongoDB.
 - [X] Handle errors and non-200 responses.
-- [] Multiple selectors.
+- [X] Multiple selectors.
 - [] New Mongodb collection every week or so.
 - [] Rate limiter's limit finder []
 - [] Proxy calls through different servers to limit rate limiting over a certain threshold.

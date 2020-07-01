@@ -6,7 +6,7 @@ module.exports = {
     SERVICE_NO_INIT_MONGO: 2, // couldn't connect to MongoDB
 
     SCRAPE_TIMEOUT: 3, // Couldn't scrape the content in time
-    SCRAPE_EMPTY_RESULT: 33, // When the result is empty, indicates bad scrape (maybe the selector has changed)
+    SCRAPE_EMPTY_RESULTS: 33, // When the result is empty, indicates bad scrape (maybe the selector has changed)
 
     // Error with sending scraped data to destination
     SERVICE_FAILURE_API: 4, // error sending POST request to destination
