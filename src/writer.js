@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
 const CronJob = require("cron").CronJob;
+const cronDiff = require("cron-diff");
 
 const util = require("./util/util");
 const errorHandler = require("./error/errorHanlder");
@@ -71,12 +72,31 @@ module.exports.init = function(){
                 customMongoConfig = util.readJSONFile(MONGODB_CONFIG);
                 if (customMongoConfig){
                     const db = mongoClient.db(MONGODB_DATABASE);
+                    // To get existing current collection to write to
+                    db.collection(customMongoConfig.mongoGeneralCollectionName)
+                    .find({}).then(() => {
+                        if (res) 
+                            currentMongoDataCollectionName = res[0].current;
+                    }).catch((e) => {
+                        console.log(e);
+                        // TODO DEAL WITH THIS ERROR
+                    });
+
+                    console.log("Here");
+                    // Schedule cron job
                     new CronJob(customMongoConfig.newCollectionCrontime, async () => {
                         currentMongoDataCollectionName = `${Date.now()}`;
                         await db.createCollection(currentMongoDataCollectionName);
+
                         try {
                             await db.collection(customMongoConfig.mongoGeneralCollectionName)
-                            .insertOne({collection: currentMongoDataCollectionName});
+                            .updateOne({}, {
+                                current: currentMongoDataCollectionName,
+                                next: currentMongoDataCollectionName 
+                                + cronDiff.timeDiffSeconds(customMongoConfig.newCollectionCrontime),
+                                $push: {collections: currentMongoDataCollectionName} 
+                            });
+                            // .insertOne({collection: currentMongoDataCollectionName});
                         } catch (e){
                             console.log(e);
                             // TODO DEAL WITH THIS ERROR
