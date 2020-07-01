@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const cron = require("node-cron");
+const CronJob = require("cron").CronJob;
 
 const util = require("./util/util");
 const writer = require("./writer");
@@ -13,9 +13,9 @@ const errors = require("./error/errors");
 	writer.init();
 
 	scrapables.forEach(async (element) => {
-		cron.schedule(element.cron, async () => {
+		new CronJob(element.cron, async () => {
 			await getData(element, browser);
-		});
+		}, null, true, undefined, undefined, true);
 	});
 	
     // await browser.close();

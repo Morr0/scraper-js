@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
-const cronjob = require("node-cron");
+const CronJob = require("cron").CronJob;
 
 const util = require("./util/util");
 const errorHandler = require("./error/errorHanlder");
@@ -33,10 +33,6 @@ let currentMongoDataCollectionName = undefined;
 // For REST POST CALL -> Must return 200 on a HEAD request to write
 // FOR file -> Will check if it is a valid path to add it
 module.exports.init = function(){
-    cronjob.schedule("1 * * * * *", () => {
-        console.log("Hello there");
-    });
-
     if (API_POST_CALL){
         const res = fetch(API_POST_CALL, {method: "HEAD"})
         .then((res) => {
@@ -73,22 +69,20 @@ module.exports.init = function(){
 
                 // Find for custom configs
                 customMongoConfig = util.readJSONFile(MONGODB_CONFIG);
-                console.log(customMongoConfig)
                 if (customMongoConfig){
                     const db = mongoClient.db(MONGODB_DATABASE);
-                    cronjob.schedule(customMongoConfig.newCollectionCrontime, async () => {
+                    new CronJob(customMongoConfig.newCollectionCrontime, async () => {
                         currentMongoDataCollectionName = `${Date.now()}`;
-                        console.log(currentMongoDataCollectionName);
                         await db.createCollection(currentMongoDataCollectionName);
                         try {
                             await db.collection(customMongoConfig.mongoGeneralCollectionName)
                             .insertOne({collection: currentMongoDataCollectionName});
-                            console.log("Wrote");
                         } catch (e){
                             console.log(e);
+                            // TODO DEAL WITH THIS ERROR
                         }
                         
-                    });
+                    }, null, true, undefined, undefined, true);
                 }
             });
         } catch (e){
@@ -148,7 +142,6 @@ async function _writeApiPost(payload){
 async function _writeMongo(payload){
     try {
         const db = mongoClient.db(MONGODB_DATABASE);
-        console.log(currentMongoDataCollectionName)
         const res = await db.collection(currentMongoDataCollectionName? 
             currentMongoDataCollectionName: MONGODB_COLLECTION)
         .insertOne({
@@ -157,7 +150,6 @@ async function _writeMongo(payload){
             epoch: Date.now(),
         });
     } catch (e){
-        console.log("CUUUU", e);
         errorHandler.failureSending(errors.SERVICE_FAILURE_MONGO,
             payload, Date.now(), "mongo", e);
     }
