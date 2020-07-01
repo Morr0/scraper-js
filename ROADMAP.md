@@ -4,7 +4,7 @@
 - [X] Write to MongoDB.
 - [X] Handle errors and non-200 responses.
 - [X] Multiple selectors.
-- [] New Mongodb collection every week or so.
+- [X] New Mongodb collection every week or so.
 - [] Rate limiter's limit finder []
 - [] Proxy calls through different servers to limit rate limiting over a certain threshold.
 - [] Deal with timeout error callbacks.

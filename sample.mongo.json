@@ -1,0 +1,4 @@
+{
+    "newCollectionCrontime": "* * * * * * <- in crontab, when to create a new MongoDB collection holding the new scraped data",
+    "mongoGeneralCollectionName": "general <- holds ids to collections holding data as well as this file's settings"
+}

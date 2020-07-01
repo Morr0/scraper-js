@@ -61,7 +61,6 @@ async function getData(item, browser){
 		}, item);
 
 		// Empty values error
-		// TODO deal with any value missing
 		if (item.selectors.length !== payload.values.length){
 			errorHandler.timeoutOrEmptyResult(errors.SCRAPE_EMPTY_RESULTS, 
 				payload, Date.now());

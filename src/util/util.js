@@ -23,3 +23,9 @@ module.exports.getWritingTemplate = function(name, value){
 module.exports.getTimeoutMs = function(scrapeItem){
     return timeDiffSeconds(scrapeItem.cron) * 750;
 }
+
+module.exports.readJSONFile = function(path){
+    if (!fs.existsSync(path)) return undefined;
+
+    return JSON.parse(fs.readFileSync(path, 'utf8'));
+}

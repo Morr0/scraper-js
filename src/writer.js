@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
+const cronjob = require("node-cron");
 
 const util = require("./util/util");
 const errorHandler = require("./error/errorHanlder");
@@ -16,6 +17,7 @@ const {
     MONGODB_URL = undefined,
     MONGODB_DATABASE = "scraper",
     MONGODB_COLLECTION="data",
+    MONGODB_CONFIG
 } = process.env;
 
 // Indexes of writeDests
@@ -23,10 +25,18 @@ const API = 0, FILE = 1, MONGODB = 2;
 
 let writeDests = [undefined, undefined, undefined]
 
+// States
+let customMongoConfig = undefined; // Holds the config
+let currentMongoDataCollectionName = undefined;
+
 // Initializes by checking the provided destinations from .env
 // For REST POST CALL -> Must return 200 on a HEAD request to write
 // FOR file -> Will check if it is a valid path to add it
 module.exports.init = function(){
+    cronjob.schedule("1 * * * * *", () => {
+        console.log("Hello there");
+    });
+
     if (API_POST_CALL){
         const res = fetch(API_POST_CALL, {method: "HEAD"})
         .then((res) => {
@@ -60,6 +70,26 @@ module.exports.init = function(){
 
                 console.log("Connected to DB");
                 writeDests[MONGODB] = MONGODB_URL;
+
+                // Find for custom configs
+                customMongoConfig = util.readJSONFile(MONGODB_CONFIG);
+                console.log(customMongoConfig)
+                if (customMongoConfig){
+                    const db = mongoClient.db(MONGODB_DATABASE);
+                    cronjob.schedule(customMongoConfig.newCollectionCrontime, async () => {
+                        currentMongoDataCollectionName = `${Date.now()}`;
+                        console.log(currentMongoDataCollectionName);
+                        await db.createCollection(currentMongoDataCollectionName);
+                        try {
+                            await db.collection(customMongoConfig.mongoGeneralCollectionName)
+                            .insertOne({collection: currentMongoDataCollectionName});
+                            console.log("Wrote");
+                        } catch (e){
+                            console.log(e);
+                        }
+                        
+                    });
+                }
             });
         } catch (e){
             handleMongoError(e);
@@ -118,12 +148,16 @@ async function _writeApiPost(payload){
 async function _writeMongo(payload){
     try {
         const db = mongoClient.db(MONGODB_DATABASE);
-        const res = await db.collection(MONGODB_COLLECTION).insertOne({
+        console.log(currentMongoDataCollectionName)
+        const res = await db.collection(currentMongoDataCollectionName? 
+            currentMongoDataCollectionName: MONGODB_COLLECTION)
+        .insertOne({
             name: payload.name,
             value: payload.values,
             epoch: Date.now(),
         });
     } catch (e){
+        console.log("CUUUU", e);
         errorHandler.failureSending(errors.SERVICE_FAILURE_MONGO,
             payload, Date.now(), "mongo", e);
     }
