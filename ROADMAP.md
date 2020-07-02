@@ -5,7 +5,7 @@
 - [X] Handle errors and non-200 responses.
 - [X] Multiple selectors.
 - [X] New Mongodb collection every week or so.
-- [] Deal with timeout error callbacks.
+- [X] Deal with timeout error callbacks.
 - [X] Deal for when there exists many instances of a selector.
 - [] Proxy calls through different servers to limit rate limiting over a certain threshold.
 - [] Validation of json format before everything else.
