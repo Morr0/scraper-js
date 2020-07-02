@@ -7,5 +7,8 @@
 - [X] New Mongodb collection every week or so.
 - [X] Deal with timeout error callbacks.
 - [X] Deal for when there exists many instances of a selector.
-- [] Proxy calls through different servers to limit rate limiting over a certain threshold.
 - [] Validation of json format before everything else.
+
+- [] Intercept items such as imgs/graphs/ and heavy stuff to not load unless they are being queried.
+- [] Specify the blockage of some domains.
+- [] Proxy calls through different servers to limit rate limiting over a certain threshold.
