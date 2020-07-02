@@ -29,7 +29,9 @@ async function getData(item, browser){
 			selectors: item.selectors,
 		};
 
-		const page = await browser.newPage();
+        const page = await browser.newPage();
+        // Use the bottom only when looking for logs from within the page
+        // page.on("console", (log) => console.log(JSON.stringify(log._text)));
 		// RESULTS IN EXCESSIVE CALLS
 		// Timeout handling // Although requests might fail for other reason
 		// page.on("requestfailed", () => {
@@ -47,12 +49,28 @@ async function getData(item, browser){
 			const selectorsValues = [];
 			// Loop over each selector and query it
 			item.selectors.forEach((selectorItem) => { 
-				const selected = document.querySelector(selectorItem.selector);
-				// Construct the value and push it to the array
-				selectorsValues.push({
-					name: selectorItem.name,
-					value: selected? selected.textContent: "",
-				})
+                // One or no values
+                if (!item.multiple){
+                    const selected = document.querySelector(selectorItem.selector);
+                    // Construct the value and push it to the array
+				    selectorsValues.push({
+                        name: selectorItem.name,
+                        value: selected? selected.textContent: "",
+                    });
+                    
+                } else { // Multiple values
+                    const selected = document.querySelectorAll(selectorItem.selector);
+                    let values = [];
+                    selected.forEach((value) => {
+                        values.push(value.textContent);
+                    });
+
+                    selectorsValues.push({
+                        name: selectorItem.name,
+                        value: values,
+                    });
+                }
+				
 			});
 			return selectorsValues;
 

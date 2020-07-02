@@ -10,6 +10,7 @@
                 "selector": ".Q8LRLc"
             }
         ],
+        "multiple": false,
         "cron": "* * * * * *", 
         "links": [
             {

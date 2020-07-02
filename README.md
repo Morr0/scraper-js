@@ -5,9 +5,10 @@ Feel free to use it. Duplicate sample.json to your liking. Include the link to y
 Each scrape request will have a timeout of 75% of the time difference between the crontab time specified for each scrape.
 
 sample.json attributes: 
-1. selector = HTML selector query
-2. cron = cronjob syntax on when to run the scrape.
-3. links = an array of links to scrape sequentially. A name/url pair.
+- selectors = array of HTML selector querys
+- multiple = in case of an array of values for each selector. If true -> grab all, else only the first
+- cron = cronjob syntax on when to run the scrape.
+- links = an array of links to scrape sequentially. A name/url pair.
 
 ## Writing the results: 
 Values can be written to a file, REST api and MongoDB insert. You can use all 3 methods.
