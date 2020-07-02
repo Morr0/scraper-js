@@ -72,31 +72,71 @@ module.exports.init = function(){
                 customMongoConfig = util.readJSONFile(MONGODB_CONFIG);
                 if (customMongoConfig){
                     const db = mongoClient.db(MONGODB_DATABASE);
-                    // To get existing current collection to write to
-                    db.collection(customMongoConfig.mongoGeneralCollectionName)
-                    .find({}).then(() => {
-                        if (res) 
-                            currentMongoDataCollectionName = res[0].current;
-                    }).catch((e) => {
-                        console.log(e);
-                        // TODO DEAL WITH THIS ERROR
-                    });
 
-                    console.log("Here");
+                    // To get existing current collection to write to
+                    // db.collection(customMongoConfig.mongoGeneralCollectionName, {strict: true}, async (error, collection) => {
+                    //     if (error){ // Collection does not exist
+                    //         // Create a new one
+                    //         try {
+                    //             currentMongoDataCollectionName = `${Date.now()}`;
+                    //             const next = (currentMongoDataCollectionName? currentMongoDataCollectionName: Date.now())
+                    //             + currentMongoDataCollectionName? cronDiff.timeDiffSeconds(customMongoConfig.newCollectionCrontime): 0;
+
+                    //             db.collection(customMongoConfig.mongoGeneralCollectionName).insertOne({
+                    //                 current: currentMongoDataCollectionName,
+                    //                 next: next,
+                    //                 collections: [
+                    //                     currentMongoDataCollectionName
+                    //                 ],
+                    //             });
+                    //         } catch (e){
+                    //             console.log(e);
+                    //             // TODO DEAL WITH THIS ERROR
+                    //         }
+                    //     } else { // If exists
+                    //         db.collection(customMongoConfig.mongoGeneralCollectionName).find()
+                    //         .toArray((error, data) => {
+                    //             // TODO DEAL WITH THIS ERROR
+                    //             if (error) return console.log(error);
+
+                    //             console.log("Data here", data)
+                    //             // currentMongoDataCollectionName = new Date(data[0].current).getTime();
+                    //             // currentMongoDataCollectionNextName = new Date(data[0].next).getTime();
+
+                    //             // To update values when it it's time
+                    //             // if (Date.now() > currentMongoDataCollectionNextName){
+                    //             //     currentMongoDataCollectionName = `${currentMongoDataCollectionNextName}`;
+                    //             //     db.collection(customMongoConfig.mongoGeneralCollectionName).updateOne({})
+                    //             // }
+                    //         });
+                    //     }
+                    // });
+                    // return;
+
                     // Schedule cron job
                     new CronJob(customMongoConfig.newCollectionCrontime, async () => {
-                        currentMongoDataCollectionName = `${Date.now()}`;
+                        const next = (currentMongoDataCollectionName? currentMongoDataCollectionName: Date.now())
+                        + currentMongoDataCollectionName? cronDiff.timeDiffSeconds(customMongoConfig.newCollectionCrontime): 0;
+
+                        console.log(cronDiff.timeDiffSeconds(customMongoConfig.newCollectionCrontime));
+                        // // Check if it is the right time to create a new collection
+                        // console.log(next > Date.now());
+                        // if (next > Date.now()) return;
+
+                        // Continue if and only if it is time to create the next collection 
+
+                        currentMongoDataCollectionName = `${next}`;
                         await db.createCollection(currentMongoDataCollectionName);
 
                         try {
                             await db.collection(customMongoConfig.mongoGeneralCollectionName)
                             .updateOne({}, {
-                                current: currentMongoDataCollectionName,
-                                next: currentMongoDataCollectionName 
-                                + cronDiff.timeDiffSeconds(customMongoConfig.newCollectionCrontime),
+                                $set: {
+                                    current: currentMongoDataCollectionName,
+                                    next: next,
+                                },
                                 $push: {collections: currentMongoDataCollectionName} 
                             });
-                            // .insertOne({collection: currentMongoDataCollectionName});
                         } catch (e){
                             console.log(e);
                             // TODO DEAL WITH THIS ERROR
