@@ -8,6 +8,9 @@ module.exports = {
     SCRAPE_TIMEOUT: 3, // Couldn't scrape the content in time
     SCRAPE_EMPTY_RESULTS: 33, // When the result is empty, indicates bad scrape (maybe the selector has changed)
 
+    // MonogDB errors
+    MONGO_FAILURE_UPDATING_GENERAL_COLLECTION:22,
+
     // Error with sending scraped data to destination
     SERVICE_FAILURE_API: 4, // error sending POST request to destination
     SERVICE_FAILURE_FILE: 5, // error writing to a file

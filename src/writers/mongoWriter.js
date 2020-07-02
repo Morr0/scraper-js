@@ -41,7 +41,7 @@ module.exports.init = function(){
             customMongoConfig = util.readJSONFile(MONGODB_CONFIG);
             if (customMongoConfig){
                 const db = mongoClient.db(MONGODB_DATABASE);
-                createGeneralCollectionIfDoesNotExist(db);
+                if (createGeneralCollectionIfDoesNotExist(db) === "error") return;
 
                 // Schedule cron job
                 cron.schedule(customMongoConfig.newCollectionCrontime, async () => {
@@ -58,16 +58,14 @@ module.exports.init = function(){
                             $push: {collections: currentMongoDataCollectionName} 
                         });
                     } catch (e){
-                        console.log(e);
-                        // TODO DEAL WITH THIS ERROR
-                    }
+                        errorHandler.failureSending(errors.MONGO_FAILURE_UPDATING_GENERAL_COLLECTION, {}, currentMongoDataCollectionName, "", e);
+                    }  
                 });
             }
         });
 
         return "a";
     } catch (e){
-        console.log(e);
         handleMongoError(e);
     }
 }
@@ -90,8 +88,8 @@ function createGeneralCollectionIfDoesNotExist(db){
 
 
         } catch (e){
-            console.log(e);
-            // TODO DEAL WITH THIS ERROR
+            errorHandler.noInitService(errors.SERVICE_NO_INIT_MONGO, e);
+            return "error";
         }
     });
 }
