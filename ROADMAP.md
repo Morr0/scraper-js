@@ -12,3 +12,4 @@
 - [] Intercept items such as imgs/graphs/ and heavy stuff to not load unless they are being queried.
 - [] Specify the blockage of some domains.
 - [] Proxy calls through different servers to limit rate limiting over a certain threshold.
+- [] Start the system from as a CLI.

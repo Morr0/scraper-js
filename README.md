@@ -23,5 +23,8 @@ Values can be written to a file, REST api and MongoDB insert. You can use all 3 
 
 - To write to a MongoDB database, use the environment variables described in `.sample.env` in your environment configuration. This will write in the same collection forever. To customize this visit the section below.
 
-## Customizing MongoDB writing: DO NOT CUSTOMIZE (NOT WORKING PROPERLY)
-Firstly, link the `.env` environment variable to a .json file to use for config. When successfully linked, will ignore the environment variable `MONGODB_COLLECTION`.
+## Customizing MongoDB writing: 
+Firstly, link the `.env` environment variable to a .json file to use for config. When successfully linked, will ignore the environment variable `MONGODB_COLLECTION`. The way it works, is you supply the config as in `./sample.mongo.json`. Is ideal when you want to scrape continuously and change the collection holding the data depending on a crontab. Config variables:
+- newCollectionCrontime: crontab value to make a new collection.
+- mongoGeneralCollectionName: general collection that holds a sequential progression of collections.
+

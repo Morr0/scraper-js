@@ -6,6 +6,7 @@ const util = require("../util/util");
 
 const errorHandler = require("../error/errorHanlder");
 const errors = require("../error/errors");
+const { Long } = require("mongodb");
 
 const MongoClient = require("mongodb").MongoClient;
 let mongoClient = undefined;
@@ -44,11 +45,8 @@ module.exports.init = function(){
 
                 // Schedule cron job
                 cron.schedule(customMongoConfig.newCollectionCrontime, async () => {
-                    const next = (currentMongoDataCollectionName? currentMongoDataCollectionName: Date.now())
-                    + currentMongoDataCollectionName? 1000 * cronDiff.timeDiffSeconds(customMongoConfig.newCollectionCrontime): 0;
+                    currentMongoDataCollectionName = `${Date.now()}`;
 
-                    // console.log("New colll");
-                    currentMongoDataCollectionName = `${next}`;
                     await db.createCollection(currentMongoDataCollectionName);
 
                     try {
@@ -56,7 +54,6 @@ module.exports.init = function(){
                         .updateOne({}, {
                             $set: {
                                 current: currentMongoDataCollectionName,
-                                next: next,
                             },
                             $push: {collections: currentMongoDataCollectionName} 
                         });
@@ -79,12 +76,11 @@ function createGeneralCollectionIfDoesNotExist(db){
     db.collection(customMongoConfig.mongoGeneralCollectionName, {strict: true}, async (error, collection) => {
         try {
             if (error){ // Create the collection
-                console.log("New collecition")
+                // console.log("New collecition");
                 currentMongoDataCollectionName = `${Date.now()}`;
     
                 await db.collection(customMongoConfig.mongoGeneralCollectionName).insertOne({
                     current: currentMongoDataCollectionName,
-                    next: "", // The reason to keep it empty is for the cron job to populate it
                     collections: [
                         currentMongoDataCollectionName
                     ],
@@ -98,29 +94,6 @@ function createGeneralCollectionIfDoesNotExist(db){
             // TODO DEAL WITH THIS ERROR
         }
     });
-}
-
-async function newCollectionJob(db){
-    const next = (currentMongoDataCollectionName? currentMongoDataCollectionName: Date.now())
-    + currentMongoDataCollectionName? cronDiff.timeDiffSeconds(customMongoConfig.newCollectionCrontime): 0;
-
-    console.log("New colll");
-    currentMongoDataCollectionName = `${next}`;
-    await db.createCollection(currentMongoDataCollectionName);
-
-    try {
-        await db.collection(customMongoConfig.mongoGeneralCollectionName)
-        .updateOne({}, {
-            $set: {
-                current: currentMongoDataCollectionName,
-                next: next,
-            },
-            $push: {collections: currentMongoDataCollectionName} 
-        });
-    } catch (e){
-        console.log(e);
-        // TODO DEAL WITH THIS ERROR
-    }
 }
 
 module.exports.write = async function(payload){
