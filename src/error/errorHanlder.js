@@ -73,6 +73,19 @@ module.exports.noInitService = function(errorCode, error = {}){
     sendMessage(message);
 }
 
+module.exports.invalid = function(errorCode, file){
+    sendMessage({
+        DelaySeconds: 10,
+        QueueUrl: AWS_QUEUE_URL,
+
+        MessageBody: JSON.stringify({
+            errorCode: errorCode,
+            desc: "Stopping program...",
+            error: `Invalid input from ${file}`,
+        }),
+    });
+}
+
 function sendMessage(message){
     sqs.sendMessage(message, (error, data) => {
         if (error) return console.log("Error in queueing");

@@ -1,10 +1,10 @@
 # Scraper for my own use
 
-Feel free to use it. Duplicate sample.json to your liking. Include the link to your file in .env.
+Feel free to use it. Duplicate `./schemas/sample.json` to your liking. Include the link to your file in .env.
 
 Each scrape request will have a timeout of 75% of the time difference between the crontab time specified for each scrape.
 
-sample.json attributes: 
+`./schemas/sample.json` attributes: 
 - selectors = array of HTML selector querys
 - multiple = in case of an array of values for each selector. If true -> grab all, else only the first
 - cron = cronjob syntax on when to run the scrape.
@@ -24,7 +24,7 @@ Values can be written to a file, REST api and MongoDB insert. You can use all 3 
 - To write to a MongoDB database, use the environment variables described in `.sample.env` in your environment configuration. This will write in the same collection forever. To customize this visit the section below.
 
 ## Customizing MongoDB writing: 
-Firstly, link the `.env` environment variable to a .json file to use for config. When successfully linked, will ignore the environment variable `MONGODB_COLLECTION`. The way it works, is you supply the config as in `./sample.mongo.json`. Is ideal when you want to scrape continuously and change the collection holding the data depending on a crontab. Config variables:
+Firstly, link the `.env` environment variable to a .json file to use for config. When successfully linked, will ignore the environment variable `MONGODB_COLLECTION`. The way it works, is you supply the config as in `./schemas/sample.mongo.json`. Is ideal when you want to scrape continuously and change the collection holding the data depending on a crontab. Config variables:
 - newCollectionCrontime: crontab value to make a new collection.
 - mongoGeneralCollectionName: general collection that holds a sequential progression of collections.
 

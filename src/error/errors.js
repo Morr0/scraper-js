@@ -16,4 +16,8 @@ module.exports = {
     SERVICE_FAILURE_FILE: 5, // error writing to a file
     SERVICE_FAILURE_MONGO: 6, // error writing to MongoDB
 
+    // Validation errors
+    JSON_INVALID_SCRAPE_FILE:7,
+    JSON_INVALID_MONGO_CUSTOM_CONFIG: 77,
+
 }
