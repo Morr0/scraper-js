@@ -8,7 +8,10 @@ const errors = require("./error/errors");
 const { TimeoutError } = require('puppeteer/Errors');
 
 (async () => {
-	const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage",
+        "--disable-gpu"],
+    });
 	
 	const scrapables = util.getScrapables();
 	writer.init();
@@ -31,7 +34,7 @@ async function getData(item, browser){
 		};
 
         try {
-            const page = await browser.newPage();
+            const page = await createPage(browser);
             // Use the bottom only when looking for logs from within the page
             // page.on("console", (log) => console.log(JSON.stringify(log._text)));
 
@@ -92,4 +95,14 @@ async function getData(item, browser){
             }
         }
 	});
+}
+
+async function createPage(browser){
+    let page = await browser.newPage();
+    // await page.setRequestInterception(true);
+    // page.on("request", (request) => {
+    //     if (request.url().endsWith())
+    // });
+
+    return page;
 }
