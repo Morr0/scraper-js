@@ -1,0 +1,18 @@
+name: Sync S3
+
+on:
+  pull_request:
+    branches: 
+    - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: Morr0/s3Sync@master
+        with:
+          accessKey: ${{secrets.AWS_ACCESS_ID}},
+          secretKey:  ${{secrets.AWS_SECRET_KEY}},
+          region: ${{secrets.AWS_REGION}},
+          bucket: ${{secrets.AWS_BUCKET}},
+          dir: ${{secrets.DIR}}      
