@@ -7,6 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest 
     steps:
+      - uses: actions/checkout@master
       - uses: Morr0/s3Sync@master
         env: 
           AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_ID}},
