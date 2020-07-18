@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest 
     steps:
       - uses: Morr0/s3Sync@master
-        with:
-          accessKey: ${{secrets.AWS_ACCESS_ID}},
-          secretKey:  ${{secrets.AWS_SECRET_KEY}},
-          region: ${{secrets.AWS_REGION}},
-          bucket: ${{secrets.AWS_BUCKET}},
-          dir: ${{secrets.DIR}}      
+        env: 
+          AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_ID}},
+          AWS_SECRET_KEY:  ${{secrets.AWS_SECRET_KEY}},
+          AWS_REGION: ${{secrets.AWS_REGION}},
+          AWS_BUCKET: ${{secrets.AWS_BUCKET}},
+          DIRECTORY: ${{secrets.DIR}}      
