@@ -9,13 +9,12 @@ const {
 
 // Aws SQS
 if (AWS_QUEUE_LOCATION) aws.config.update({region: AWS_QUEUE_LOCATION});
-const options = {
+const sqs = new aws.SQS({
     apiVersion: "2012-11-05",
-};
-if (AWS_ACCESS_KEY) options.accessKeyId = AWS_ACCESS_KEY;
-if (AWS_SECRET_ACCESS_KEY) options.secretAccessKey = AWS_SECRET_ACCESS_KEY;
 
-const sqs = new aws.SQS(options);
+    accessKeyId: AWS_ACCESS_KEY? AWS_ACCESS_KEY: accessKeyId,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY? AWS_SECRET_ACCESS_KEY: secretAccessKey,
+});
 
 module.exports.test = function(){
     sendMessage({
